@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+
+  <meta
+    name="description"
+    content="AURA — a personal AI assistant for thinking, learning, creating, solving and exploring."
+  />
+
+  <meta name="theme-color" content="#080b0f" />
+
+  <title>AURA — Personal AI</title>
+
+  <link rel="stylesheet" href="style.css" />
+
+  <script src="script.js" defer></script>
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header>
+      <div class="brand">
+        <div class="logo">AURA</div>
+
+        <div class="subtitle">
+          PERSONAL INTELLIGENCE
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button
+          type="button"
+          class="secondary-button"
+          id="newChatButton"
+        >
+          + New
+        </button>
+
+        <button
+          type="button"
+          class="secondary-button danger-button"
+          id="clearMemoryButton"
+        >
+          Clear
+        </button>
+
+        <button
+          type="button"
+          class="secondary-button"
+          id="settingsButton"
+        >
+          Settings
+        </button>
+      </div>
+    </header>
+
+
+    <!-- =====================================================
+         WORKSPACE
+         ===================================================== -->
+
+    <div class="workspace">
+
+      <!-- ===================================================
+           HISTORY SIDEBAR
+           =================================================== -->
+
+      <aside
+        class="history-panel"
+        id="historyPanel"
+        aria-label="Conversation history"
+      >
+
+        <div class="history-heading">
+          Conversations
+        </div>
+
+        <div
+          class="conversation-list"
+          id="conversationList"
+        ></div>
+
+        <div
+          class="history-empty"
+          id="historyEmpty"
+        >
+          No conversations yet.
+        </div>
+
+      </aside>
+
+
+      <!-- ===================================================
+           MAIN
+           =================================================== -->
+
+      <main>
+
+        <!-- Mobile history control -->
+
+        <div class="mobile-history-bar">
+          <button
+            type="button"
+            class="mobile-history-button"
+            id="openHistoryButton"
+          >
+            ☰ History
+          </button>
+        </div>
+
+
+        <!-- =================================================
+             WELCOME
+             ================================================= -->
+
+        <section
+          class="welcome"
+          id="welcome"
+        >
+          <h1>How can AURA help?</h1>
+
+          <p>
+            Think, learn, create, solve and explore —
+            with your personal AI assistant.
+          </p>
+        </section>
+
+
+        <!-- =================================================
+             KNOWLEDGE
+             ================================================= -->
+
+        <section class="knowledge-panel">
+
+          <div class="knowledge-header">
+
+            <div>
+              <h2 class="knowledge-title">
+                Local Knowledge
+              </h2>
+
+              <p class="knowledge-description">
+                Add TXT files to give AURA additional context.
+                Your files stay in this browser.
+              </p>
+            </div>
+
+            <label
+              class="knowledge-upload-button"
+              for="knowledgeInput"
+            >
+              + Add File
+            </label>
+
+            <input
+              type="file"
+              id="knowledgeInput"
+              accept=".txt,text/plain"
+              hidden
+              multiple
+            />
+
+          </div>
+
+          <div
+            class="knowledge-list"
+            id="knowledgeList"
+          ></div>
+
+        </section>
+
+
+        <!-- =================================================
+             CHAT
+             ================================================= -->
+
+        <section
+          class="chat"
+          id="chat"
+          aria-live="polite"
+        ></section>
+
+
+        <!-- =================================================
+             IMAGE PREVIEW
+             ================================================= -->
+
+        <div
+          class="image-preview"
+          id="imagePreview"
+          hidden
+        ></div>
+
+
+        <!-- =================================================
+             INPUT
+             ================================================= -->
+
+        <form
+          class="chat-form"
+          id="chatForm"
+        >
+
+          <div class="input-area">
+
+            <label
+              class="image-upload-button"
+              for="imageInput"
+              title="Attach image"
+              aria-label="Attach image"
+            >
+              +
+            </label>
+
+            <input
+              type="file"
+              id="imageInput"
+              accept="image/jpeg,image/png,image/webp"
+              hidden
+            />
+
+            <textarea
+              id="input"
+              rows="1"
+              placeholder="Message AURA..."
+              autocomplete="off"
+              aria-label="Message AURA"
+            ></textarea>
+
+            <button
+              type="submit"
+              class="send-button"
+              id="sendButton"
+            >
+              Send
+            </button>
+
+          </div>
+
+        </form>
+
+        <div class="input-hint">
+          Enter to send · Shift + Enter for a new line
+        </div>
+
+      </main>
+
+    </div>
+
+
+    <!-- =====================================================
+         SETTINGS MODAL
+         ===================================================== -->
+
+    <div
+      class="settings-overlay"
+      id="settingsModal"
+      aria-hidden="true"
+    >
+
+      <div
+        class="settings-panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settingsTitle"
+      >
+
+        <div class="settings-header">
+
+          <h2 id="settingsTitle">
+            AURA Settings
+          </h2>
+
+          <button
+            type="button"
+            class="settings-close-button"
+            id="closeSettingsButton"
+            aria-label="Close settings"
+          >
+            ×
+          </button>
+
+        </div>
+
+
+        <!-- Memory -->
+
+        <section class="settings-section">
+
+          <h3>
+            Memory
+          </h3>
+
+          <div class="memory-stats">
+
+            <div class="memory-stat">
+              <div
+                class="memory-stat-value"
+                id="conversationCount"
+              >
+                0
+              </div>
+
+              <div class="memory-stat-label">
+                Conversations
+              </div>
+            </div>
+
+            <div class="memory-stat">
+              <div
+                class="memory-stat-value"
+                id="storageSize"
+              >
+                0 KB
+              </div>
+
+              <div class="memory-stat-label">
+                Stored locally
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- Data -->
+
+        <section class="settings-section">
+
+          <h3>
+            Your Data
+          </h3>
+
+          <div class="settings-actions">
+
+            <button
+              type="button"
+              class="settings-action-button"
+              id="exportButton"
+            >
+              Export Memory
+            </button>
+
+            <button
+              type="button"
+              class="settings-action-button"
+              id="importButton"
+            >
+              Import Memory
+            </button>
+
+            <input
+              type="file"
+              id="importInput"
+              accept=".json,application/json"
+              hidden
+            />
+
+            <button
+              type="button"
+              class="settings-action-button danger-action"
+              id="settingsClearButton"
+            >
+              Delete All Memory
+            </button>
+
+          </div>
+
+          <p class="settings-note">
+            Conversations and knowledge files are stored
+            locally in your browser.
+          </p>
+
+        </section>
+
+
+        <!-- Privacy -->
+
+        <section class="settings-section">
+
+          <h3>
+            Privacy
+          </h3>
+
+          <p>
+            AURA stores your conversations and local knowledge
+            in browser storage. Messages are sent to the AI
+            backend when you ask AURA for a response.
+          </p>
+
+        </section>
+
+
+        <div class="settings-footer">
+          AURA · Personal Intelligence
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</body>
+</html>
