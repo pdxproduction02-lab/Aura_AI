@@ -1605,6 +1605,118 @@
 
     return wrapper;
   }
+    /* =========================================================
+     TYPEWRITER RESPONSE
+     ========================================================= */
+
+  function sleep(milliseconds) {
+    return new Promise(
+      resolve =>
+        setTimeout(
+          resolve,
+          milliseconds
+        )
+    );
+  }
+
+  async function typeAssistantMessage(
+    conversation,
+    content
+  ) {
+    if (!conversation) {
+      return;
+    }
+
+    const message = {
+      id:
+        createId("msg"),
+
+      role:
+        "assistant",
+
+      content:
+        "",
+
+      createdAt:
+        now()
+    };
+
+    conversation.messages.push(
+      message
+    );
+
+    conversation.updatedAt =
+      message.createdAt;
+
+    updateConversationTitle(
+      conversation
+    );
+
+    saveConversations();
+
+    removeThinkingMessage();
+
+    const messageElement =
+      renderMessage(
+        message
+      );
+
+    const contentElement =
+      messageElement?.querySelector(
+        ".message-content"
+      );
+
+    if (!contentElement) {
+      message.content =
+        content;
+
+      saveConversations();
+      renderChat();
+
+      return;
+    }
+
+    /*
+      Reveal the response in small chunks.
+      Chunking is more efficient than updating
+      the DOM once for every individual character.
+    */
+    const text =
+      safeString(content);
+
+    let position = 0;
+
+    const chunkSize = 2;
+
+    while (
+      position < text.length
+    ) {
+      message.content =
+        text.slice(
+          0,
+          position + chunkSize
+        );
+
+      position +=
+        chunkSize;
+
+      contentElement.innerHTML =
+        renderMarkdown(
+          message.content
+        );
+
+      scrollChatToBottom();
+
+      await sleep(12);
+    }
+
+    message.content =
+      text;
+
+    saveConversations();
+
+    renderHistory();
+  }
 
   /* =========================================================
      THINKING INDICATOR
