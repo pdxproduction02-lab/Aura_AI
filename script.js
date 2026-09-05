@@ -3123,16 +3123,10 @@
           conversation
         );
 
-      removeThinkingMessage();
-
-      addMessage(
+            await typeAssistantMessage(
         conversation,
-        "assistant",
         reply
       );
-
-      renderHistory();
-      renderChat();
     } catch (error) {
       console.error(
         "AURA request error:",
